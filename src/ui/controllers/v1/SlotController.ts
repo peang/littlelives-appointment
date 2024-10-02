@@ -26,14 +26,21 @@ export class SlotController {
     }
   }
 
-  @Post('/')
+  @Post('/book')
   public async bookSlots(@Body() body: BookAvailableSlotsDTO): Promise<IApiResponse> {
     // Im usually using Hapi/Joi for validation hence its more object friendly
-    const availableSlots = await this.bookAvailableSlotsUseCase.execute(body);
 
     return {
-      message: "Slots Booked",
-      data: availableSlots,
+      message: "Appointment Booked",
+      data: await this.bookAvailableSlotsUseCase.execute(body),
+    }
+  }
+
+  @Post('/cancel')
+  public async cancelSlots(@Body() body: BookAvailableSlotsDTO): Promise<IApiResponse> {
+    return {
+      message: "Appointment Cancelled",
+      data: await this.bookAvailableSlotsUseCase.execute(body),
     }
   }
 }
