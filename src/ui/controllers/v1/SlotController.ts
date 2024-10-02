@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Post, Query } from "@nestjs/common";
-import { BookAvailableSlotsDTO } from "../../../application/dtos/slots/BookAvailableSlots.dto";
+import { BookSlotsDTO } from "../../../application/dtos/slots/BookSlots.dto";
+import { CancelSlotsDTO } from "../../../application/dtos/slots/CancelSlots.dto";
 import { GetAvailableSlotsDTO } from "../../../application/dtos/slots/GetAvailableSlots.dto";
 import { IApiResponse } from "../../../application/types/app";
-import { BookAvailableSlotsUseCase } from "../../../application/use-cases/slot/BookAvailableSlots.uc";
+import { BookSlotsUseCase } from "../../../application/use-cases/slot/BookSlots.uc";
+import { CancelSlotsUseCase } from "../../../application/use-cases/slot/CancelSlots.uc";
 import { GetAvailableSlotUseCase } from "../../../application/use-cases/slot/GetSlotsAvailable.uc";
 
 @Controller({
@@ -12,7 +14,8 @@ import { GetAvailableSlotUseCase } from "../../../application/use-cases/slot/Get
 export class SlotController {
   constructor(
     private readonly getAvailableSlotUseCase: GetAvailableSlotUseCase,
-    private readonly bookAvailableSlotsUseCase: BookAvailableSlotsUseCase,
+    private readonly bookAvailableSlotsUseCase: BookSlotsUseCase,
+    private readonly cancelSlotsUseCase: CancelSlotsUseCase,
   ) { }
 
   @Get('/')
@@ -27,7 +30,7 @@ export class SlotController {
   }
 
   @Post('/book')
-  public async bookSlots(@Body() body: BookAvailableSlotsDTO): Promise<IApiResponse> {
+  public async bookSlots(@Body() body: BookSlotsDTO): Promise<IApiResponse> {
     // Im usually using Hapi/Joi for validation hence its more object friendly
 
     return {
@@ -37,10 +40,10 @@ export class SlotController {
   }
 
   @Post('/cancel')
-  public async cancelSlots(@Body() body: BookAvailableSlotsDTO): Promise<IApiResponse> {
+  public async cancelSlots(@Body() body: CancelSlotsDTO): Promise<IApiResponse> {
     return {
       message: "Appointment Cancelled",
-      data: await this.bookAvailableSlotsUseCase.execute(body),
+      data: await this.cancelSlotsUseCase.execute(body),
     }
   }
 }

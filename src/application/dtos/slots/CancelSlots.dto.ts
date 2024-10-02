@@ -1,6 +1,6 @@
-import { IsInt, IsPositive, IsString, Matches } from 'class-validator';
+import { IsString, Matches } from 'class-validator';
 
-export class BookAvailableSlotsDTO {
+export class CancelSlotsDTO {
   @IsString()
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'date must be in yyyy-mm-dd format',
@@ -12,8 +12,4 @@ export class BookAvailableSlotsDTO {
     message: 'time must be in HH:mm format',
   })
   time: string;
-
-  @IsInt()
-  @IsPositive()
-  slot: number;
 }

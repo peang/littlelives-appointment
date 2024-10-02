@@ -7,7 +7,8 @@ import { AppointmentModel } from '../models/AppointmentModel';
 @Injectable()
 export class AppointmentRepository implements AppointmentRepositoryInterface {
   constructor(private readonly sequelize: Sequelize) { }
-  async create(entity: AppointmentEntity): Promise<void> {
+
+  async create(entity: AppointmentEntity): Promise<AppointmentEntity> {
     const t = await this.sequelize.transaction();
 
     t.LOCK;
@@ -21,6 +22,8 @@ export class AppointmentRepository implements AppointmentRepositoryInterface {
 
       entity.setId(appointmentModel.id);
       t.commit();
+
+      return entity;
     } catch (err) {
       t.rollback();
       throw err;
@@ -38,5 +41,33 @@ export class AppointmentRepository implements AppointmentRepositoryInterface {
     });
 
     return appointments.map((model) => AppointmentModel.toEntity(model));
+  }
+
+  async detail(date: string, time: string): Promise<AppointmentEntity | null> {
+    const where = {
+      date,
+      time,
+    };
+
+    const appointment = await AppointmentModel.findOne({
+      attributes: ['date', 'time', 'duration', 'slot'],
+      where,
+    });
+
+    if (!appointment) {
+      return null;
+    }
+
+    return AppointmentModel.toEntity(appointment);
+  }
+
+  async delete(entity: AppointmentEntity): Promise<void> {
+    const where = {
+      id: entity.getId(),
+    };
+
+    await AppointmentModel.destroy({
+      where,
+    });
   }
 }

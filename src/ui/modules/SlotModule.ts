@@ -1,7 +1,8 @@
 
 import { Module } from '@nestjs/common';
 import { AppointmentService } from '../../application/services/AppointmentService';
-import { BookAvailableSlotsUseCase } from '../../application/use-cases/slot/BookAvailableSlots.uc';
+import { BookSlotsUseCase } from '../../application/use-cases/slot/BookSlots.uc';
+import { CancelSlotsUseCase } from '../../application/use-cases/slot/CancelSlots.uc';
 import { GetAvailableSlotUseCase } from '../../application/use-cases/slot/GetSlotsAvailable.uc';
 import { InfraModule } from '../../infra/infra.module';
 import { AppointmentRepository } from '../../infra/repositories/AppointmentRepository';
@@ -11,7 +12,8 @@ const providers = [
   AppointmentService,
 
   GetAvailableSlotUseCase,
-  BookAvailableSlotsUseCase,
+  BookSlotsUseCase,
+  CancelSlotsUseCase,
   {
     provide: 'AppointmentRepositoryInterface',
     useClass: AppointmentRepository,
