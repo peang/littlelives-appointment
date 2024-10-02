@@ -15,6 +15,10 @@ module.exports = {
           allowNull: false,
           type: Sequelize.STRING,
         },
+        remarks: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
         created_at: {
           allowNull: false,
           type: Sequelize.DATE,

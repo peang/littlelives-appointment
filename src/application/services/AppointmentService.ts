@@ -3,12 +3,14 @@ import * as Bluebird from 'bluebird';
 import moment from 'moment';
 import { AppointmentEntity } from '../../domain/entities/AppointmentEntity';
 
+type ISlot = { date: string; time: string; available_slots: number };
+
 @Injectable()
 export class AppointmentService {
   async getSlots(
     appointmentEntities: AppointmentEntity[],
     date: string,
-  ): Promise<{ date: string; time: string; available_slots: number }[]> {
+  ): Promise<ISlot[]> {
     const baseSlots = await this.generateBaseSlots(date);
 
     // Populate Appointments
@@ -27,6 +29,7 @@ export class AppointmentService {
           0,
         );
 
+        // Update Available Slots
         slot.available_slots -= totalBookedSlots;
       }
     });
@@ -40,7 +43,7 @@ export class AppointmentService {
     date: string,
     time: string,
     slot: number,
-  ): Promise<{ date: string; time: string; available_slots: number }> {
+  ): Promise<ISlot> {
     const baseSlots = await this.generateBaseSlots(date);
 
     const foundSlot = await this.findSpecificSlot(baseSlots, date, time);
@@ -76,13 +79,7 @@ export class AppointmentService {
     return foundSlot;
   }
 
-  private async generateBaseSlots(date: string): Promise<
-    {
-      date: string;
-      time: string;
-      available_slots: number;
-    }[]
-  > {
+  private async generateBaseSlots(date: string): Promise<ISlot[]> {
     const activeDays = process.env.SLOT_ACTIVE_DAYS.split(',').map((day) =>
       day.trim(),
     );
@@ -121,7 +118,7 @@ export class AppointmentService {
   }
 
   private async findSpecificSlot(
-    baseSlots: { date: string; time: string; available_slots: number }[],
+    baseSlots: ISlot[],
     date: string,
     time: string,
   ): Promise<{ date: string; time: string; available_slots: number }> {

@@ -6,6 +6,7 @@ import { CancelSlotsUseCase } from '../../application/use-cases/slot/CancelSlots
 import { GetAvailableSlotUseCase } from '../../application/use-cases/slot/GetSlotsAvailable.uc';
 import { InfraModule } from '../../infra/infra.module';
 import { AppointmentRepository } from '../../infra/repositories/AppointmentRepository';
+import { HolidayRepository } from '../../infra/repositories/HolidayRepository';
 import { SlotController } from '../controllers/v1/SlotController';
 
 const providers = [
@@ -17,6 +18,10 @@ const providers = [
   {
     provide: 'AppointmentRepositoryInterface',
     useClass: AppointmentRepository,
+  },
+  {
+    provide: 'HolidayRepositoryInterface',
+    useClass: HolidayRepository,
   }
 
 ];
